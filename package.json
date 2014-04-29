@@ -1,0 +1,14 @@
+{
+  "name": "ex-curl",
+  "version": "0.0.3",
+  "description": "client url library, row level request functions",
+  "tags": [
+    "request",
+    "util",
+    "http",
+	"curl"
+  ],
+  "authors": "starkey <spirotles@gmail.com>",
+  "main": "./index.js",
+  "readmeFilename": "README.md"
+}

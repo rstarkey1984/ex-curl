@@ -22,34 +22,35 @@ var curl = require('ex-curl');
 
 # GET
 
-var param = {};
+	var param = {};
 
-param['test1'] = '~!@#$%^&*()-+';
+	param['test1'] = '~!@#$%^&*()-+';
 
-param['test2'] = 2;
+	param['test2'] = 2;
 
-var str_param = curl.stringify(param);
+	var str_param = curl.stringify(param);
 
-var url = 'url wanted'; // put your wanted url
+	var url = 'url wanted'; // put your wanted url
 
-var options = [url + '?' + str_param];
+	var options = [url + '?' + str_param];
 
-curl.open(options, function(){
+	curl.open(options, function(){
 
-	if (this['code'] == 0){ // 0 is success
+		if (this['code'] == 0){ // 0 is success
 
-		console.log(this['header']); // object
+			console.log(this['header']); // object
 
-		console.log(this['body']); // buffer
+			console.log(this['body']); // buffer
 
-		console.log(this['body'].toString()); // string
+			console.log(this['body'].toString()); // string
 
-	}else{ 
+		}else{ 
 
-		console.log(this['error'].toString());
+			console.log(this['error'].toString());
 
-	}
-});
+		}
+
+	});
 
 # POST
 

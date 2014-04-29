@@ -1,24 +1,24 @@
 # CURL -- Simple client url library, with low level request functions
 
-## Install
+# Install
 
-$ npm install ex-curl
+	$ npm install ex-curl
 
 # you must check
 
-$ curl --help
+	$ curl --help
 
 # Setting
 
-$ curl -i --request POST --data test=1 url_wanted
+	$ curl -i --request POST --data test=1 url_wanted
 
-equal
+	equal
 
-var options = ['-i', '--request', 'POST', '--data', 'test=1', 'url wanted'];
+	var options = ['-i', '--request', 'POST', '--data', 'test=1', 'url wanted'];
 
-## Example
+# Example
 
-var curl = require('ex-curl');
+	var curl = require('ex-curl');
 
 # GET
 
@@ -54,44 +54,40 @@ var curl = require('ex-curl');
 
 # POST
 
-var param = {};
+	var param = {};
 
-param['test1'] = '~!@#$%^&*()-+';
+	param['test1'] = '~!@#$%^&*()-+';
 
-param['test2'] = 2;
+	param['test2'] = 2;
 
-var str_param = curl.stringify(param);
+	var str_param = curl.stringify(param);
 
-var url = 'url wanted'; // put your wanted url
+	var url = 'url wanted'; // put your wanted url
 
-var options = ['--data', str_param, url];
+	var options = ['--data', str_param, url];
 
-curl.open(options, function(){
+	curl.open(options, function(){
 
-});
+	});
 
 # FILE INCLUDE
 
-var param = {};
+	var param = {};
 
-param['test1'] = '~!@#$%^&*()-+';
+	param['test1'] = '~!@#$%^&*()-+';
 
-param['test2'] = 2;
+	param['test2'] = 2;
 
-param['file1'] = '@localfilename1';
+	param['file1'] = '@localfilename1';
 
-param['file2'] = '@localfilename2';
+	param['file2'] = '@localfilename2';
 
-var str_param = curl.stringify(param);
+	var str_param = curl.stringify(param);
 
-var url = 'url wanted'; // put your wanted url
+	var url = 'url wanted'; // put your wanted url
 
-var options = ['--form', str_param, url];
+	var options = ['--form', str_param, url];
 
-curl.open(options, function(){
+	curl.open(options, function(){
 
-});
-
-# you must check
-
-$ curl --help
+	});

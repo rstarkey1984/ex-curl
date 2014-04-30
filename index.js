@@ -7,7 +7,7 @@
 
  $ curl --help
 
- */
+ */ 
 
 var spawn = require('child_process').spawn;
 var VERSION = '0.0.4';

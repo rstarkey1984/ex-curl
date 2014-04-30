@@ -10,7 +10,7 @@
  */
 
 var spawn = require('child_process').spawn;
-var VERSION = '0.0.3';
+var VERSION = '0.0.4';
 
 CURL = {};
 

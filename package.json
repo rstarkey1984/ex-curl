@@ -1,6 +1,6 @@
 {
 	"name": "ex-curl",
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"description": "client url library, row level request functions",
 	"tags": [
 		"request",
@@ -14,5 +14,5 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/rstarkey1984/ex-curl.git"
-	},
+	}
 } 

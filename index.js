@@ -10,7 +10,9 @@
  */ 
 
 var spawn = require('child_process').spawn;
-var VERSION = '0.0.4';
+var VERSION = '0.0.6';
+
+String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
 
 CURL = {};
 
@@ -106,15 +108,29 @@ CURL.open = function(/* callback, options */){
 				if (json_header != ''){
 					var header_arr = new Buffer(JSON.parse(json_header)).toString().split('\r\n');
 					var headers = new Array();
-					var pattern = /(.+?): (.+)/;
-					for (var key in header_arr){
-						if (key == 0){
-							headers['status'] = header_arr[key];
+					var pattern = /(.+?):(.+)/;
+					for (var index in header_arr){
+						if (index == 0){
+							headers['status'] = header_arr[index];
 						}else{
-							var match = pattern.exec(header_arr[key]);
+							var match = pattern.exec(header_arr[index]);
 						
 							if (match !== null && match[1] != undefined && match[2] != undefined){
-								headers[match[1].toLowerCase()] = match[2];
+								var key = match[1].toLowerCase().trim();
+								var val = match[2].trim();
+
+								if (headers[key] == undefined){
+									headers[key] = val;
+								}else{
+									if (typeof(headers[key]) == 'string'){
+										var str = headers[key];
+										headers[key] = new Array();
+										headers[key].push(str);
+									}
+
+									headers[key].push(val);
+								}
+								
 							}
 						}
 					}
@@ -139,5 +155,7 @@ CURL.open = function(/* callback, options */){
 
 	curl.on('close', function(code){ });
 }
+
+
 
 module.exports = CURL;

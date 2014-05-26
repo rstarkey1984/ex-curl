@@ -16,11 +16,28 @@
 
 	var options = ['-i', '--request', 'POST', '--data', 'test=1', 'url wanted'];
 
-# Example
+# Simple Example
 
 	var curl = require('ex-curl');
 
+	var options = ['url wanted'];
+
+	curl.open(options, function(code){
+
+		if (code == 0){ // 0 is success
+			
+			// what you want
+			console.log(this);
+
+		}else{
+			console.log(this['error'].toString());
+		}
+	
+	});
+
 # GET 
+
+	var curl = require('ex-curl');
 
 	var param = {};
 
@@ -34,25 +51,22 @@
 
 	var options = [url + '?' + str_param];
 
-	curl.open(options, function(){
+	curl.open(options, function(code){
+		
+		if (code == 0){ // 0 is success
+			
+			// what you want
+			console.log(this);
 
-		if (this['code'] == 0){ // 0 is success
-
-			console.log(this['header']); // object
-
-			console.log(this['body']); // buffer
-
-			console.log(this['body'].toString()); // string
-
-		}else{ 
-
+		}else{
 			console.log(this['error'].toString());
-
 		}
-
+		
 	});
 
 # POST
+
+	var curl = require('ex-curl');
 
 	var param = {};
 
@@ -66,11 +80,22 @@
 
 	var options = ['--data', str_param, url];
 
-	curl.open(options, function(){
+	curl.open(options, function(code){
+		
+		if (code == 0){ // 0 is success
+			
+			// what you want
+			console.log(this);
 
+		}else{
+			console.log(this['error'].toString());
+		}
+		
 	});
 
 # FILE INCLUDE
+
+	var curl = require('ex-curl');
 
 	var param = {};
 
@@ -88,6 +113,27 @@
 
 	var options = ['--form', str_param, url];
 
-	curl.open(options, function(){
+	curl.open(options, function(code){
+		
+		if (code == 0){ // 0 is success
+			
+			// what you want
+			console.log(this);
 
+		}else{
+			console.log(this['error'].toString());
+		}
+		
 	});
+
+# Callback Function Property
+
+	this // object
+
+	this['code'] // number
+
+	this['header'] // object
+
+	this['body'] // buffer
+
+	this['error'] // buffer

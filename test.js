@@ -1,16 +1,16 @@
 var curl = require('./index.js');
 
-var url = '';
+var options = ['url wanted'];
 
-var options = [url];
+curl.open(options, function(code){
 
-curl.open(options, function(){
+	if (code == 0){ // 0 is success
+		
+		// what you want
+		console.log(this);
 
-	if (this['code'] == 0){
-		console.log(this['header']);
-		console.log(this['body'].toString());
 	}else{
-		console.log(this['error']);
+		console.log(this['error'].toString());
 	}
 
 });

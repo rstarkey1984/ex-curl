@@ -10,7 +10,7 @@
  */ 
 
 var spawn = require('child_process').spawn;
-var VERSION = '0.0.6';
+var VERSION = '1.0.0';
 
 String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
 
@@ -83,12 +83,12 @@ CURL.open = function(/* callback, options */){
 
 		var data = {};
 		data['code'] = code;
+		data['error'] = new Buffer(0);
+		data['header'] = {};
+		data['body'] = new Buffer(0);
 
 		// when the spawn child process exits, check if there were any errors and close the writeable stream
 		if (code == 0){
-			
-			data['header'] = {};
-			data['body'] = new Buffer(0);
 
 			var buffer = Buffer.concat(chunks);
 
@@ -148,7 +148,7 @@ CURL.open = function(/* callback, options */){
 		}
 
 		if (callback != undefined){
-			callback.apply(data);
+			callback.apply(data, [code]);
 		}
 
 	});

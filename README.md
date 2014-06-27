@@ -10,11 +10,11 @@
 
 # Setting
 
-	$ curl -i --request POST --data test=1 url_wanted
+	$ curl --request POST --data test=1 url_wanted
 
 	equal
 
-	var options = ['-i', '--request', 'POST', '--data', 'test=1', 'url wanted'];
+	var options = ['--request', 'POST', '--data', 'test=1', 'url wanted'];
 
 # Simple Example
 

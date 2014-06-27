@@ -1,7 +1,7 @@
 /*
  * Copyright 2014, Starkey Richard
  *
- * Date: 2014-04-28
+ * Date: 2014-06-27
 
  # you must check
 
@@ -10,13 +10,10 @@
  */ 
 
 var spawn = require('child_process').spawn;
-var VERSION = '1.0.0';
 
 String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
 
 CURL = {};
-
-CURL.VERSION = VERSION;
 
 CURL.stringify = function(obj_param){
 	var str_param = '';
@@ -39,8 +36,7 @@ CURL.open = function(/* callback, options */){
 		callback = args[1];
 	}
 
-	var has_header = false;
-	if (options.indexOf('-i') < 0 && options.indexOf('-I') < 0) options.splice(0, 0, '-i');
+	if (options.indexOf('-v') < 0 && options.indexOf('--verbose') < 0) options.splice(0, 0, '-v');
 
 	if (options.indexOf('-A') < 0){ // no user-agent
 		options.push('-A');
@@ -81,70 +77,74 @@ CURL.open = function(/* callback, options */){
 	
 	curl.on('exit', function(code) {
 
+		var buf_stderr = Buffer.concat(errors);
+		var buf_stdout = Buffer.concat(chunks);
+
 		var data = {};
 		data['code'] = code;
-		data['error'] = new Buffer(0);
+		data['error'] = buf_stderr;
+		data['body'] = buf_stdout;
 		data['header'] = {};
-		data['body'] = new Buffer(0);
 
 		// when the spawn child process exits, check if there were any errors and close the writeable stream
 		if (code == 0){
 
-			var buffer = Buffer.concat(chunks);
+			var header_arr = new Array();
+			var headers = new Array();
 
-			var json = JSON.stringify(buffer);
+			var pattern = /\< HTTP\/(.+?)\r\n/gi;
+			var match_http = data['error'].toString().match(pattern);
 
-			var pattern = /^\[(.+?),13,10,13,10(?:,)?([^\]]+)?\]/gmi;
-			var match = pattern.exec(json);
-
-			if (match !== null){
-				
-				var json_header = '';
-				var json_body = '';
-				if (match[1] != undefined) json_header = '[' + match[1] + ']';
-				if (match[2] != undefined) json_body = '[' + match[2] + ']';
-
-
-				if (json_header != ''){
-					var header_arr = new Buffer(JSON.parse(json_header)).toString().split('\r\n');
-					var headers = new Array();
-					var pattern = /(.+?):(.+)/;
-					for (var index in header_arr){
-						if (index == 0){
-							headers['status'] = header_arr[index];
-						}else{
-							var match = pattern.exec(header_arr[index]);
-						
-							if (match !== null && match[1] != undefined && match[2] != undefined){
-								var key = match[1].toLowerCase().trim();
-								var val = match[2].trim();
-
-								if (headers[key] == undefined){
-									headers[key] = val;
-								}else{
-									if (typeof(headers[key]) == 'string'){
-										var str = headers[key];
-										headers[key] = new Array();
-										headers[key].push(str);
-									}
-
-									headers[key].push(val);
-								}
-								
-							}
-						}
+			for (var index in match_http){
+				var pattern = /(\< )|\r|\n/gi;
+				var key = 'status';
+				var val = match_http[index].replace(pattern, '');
+				if (headers[key] == undefined){
+					headers[key] = val;
+				}else{
+					if (typeof(headers[key]) == 'string'){
+						var str = headers[key];
+						headers[key] = new Array();
+						headers[key].push(str);
 					}
 
-					data['header'] = headers;
+					headers[key].push(val);
 				}
-
-				if (json_body != '') data['body'] = new Buffer(JSON.parse(json_body));
-				
 			}
 
-		}else{
-			var buf_error = Buffer.concat(errors);
-			data['error'] = buf_error;
+			var pattern = /\<(.+?):(.+?)\r\n/gi;
+			var match = data['error'].toString().match(pattern);
+
+			for (var index in match){
+				var pattern = /(\< )|\r|\n/gi;
+				header_arr.push(match[index].replace(pattern, ''));
+			}
+
+			var pattern = /(.+?):(.+)/;
+			for (var index in header_arr){
+				var match = pattern.exec(header_arr[index]);
+			
+				if (match !== null && match[1] != undefined && match[2] != undefined){
+					var key = match[1].toLowerCase().trim();
+					var val = match[2].trim();
+
+					if (headers[key] == undefined){
+						headers[key] = val;
+					}else{
+						if (typeof(headers[key]) == 'string'){
+							var str = headers[key];
+							headers[key] = new Array();
+							headers[key].push(str);
+						}
+
+						headers[key].push(val);
+					}
+					
+				}
+			}
+
+			data['header'] = headers;
+
 		}
 
 		if (callback != undefined){
